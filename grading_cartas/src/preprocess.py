@@ -32,5 +32,5 @@ def preprocess_image(image_path):
 
 # Prueba con una imagen
 if __name__ == "__main__":
-    points = preprocess_image("../data/carta.jpg")
+    points = preprocess_image("pikachu.jpg")
     print("Puntos detectados:", points)

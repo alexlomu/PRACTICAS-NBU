@@ -36,5 +36,5 @@ def calculate_grading(image_path):
 
 # Prueba con una imagen
 if __name__ == "__main__":
-    score = calculate_grading("../data/carta.jpg")
+    score = calculate_grading("pikachu.jpg")
     print("Calificación de la carta:", score)

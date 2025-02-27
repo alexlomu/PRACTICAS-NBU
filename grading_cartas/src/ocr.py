@@ -13,5 +13,5 @@ def extract_text(image_path):
 
 # Prueba con una imagen
 if __name__ == "__main__":
-    text = extract_text("../data/carta.jpg")
+    text = extract_text("pikachu.jpg")
     print("Texto extraído:", text)
