@@ -30,7 +30,7 @@ def extract_text(image_path):
     pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
     # 🔹 Ejecutar OCR con configuración avanzada
-    custom_config = r'--oem 3 --psm 4'  # Cambia a psm 6 si es necesario
+    custom_config = r'--oem 3 --psm 11'  # Cambia a psm 4 si es necesario- funciona bien con 4 o 11
     text = pytesseract.image_to_string(gray, config=custom_config, lang="eng")
 
     print("Texto detectado:")
@@ -39,5 +39,5 @@ def extract_text(image_path):
     return text.strip()
 
 # Prueba con la imagen
-extract_text(r"C:\Users\paula\Documents\GitHub\PRACTICAS-NBU\pikachu.jpg")
+extract_text(r"C:\Users\paula\Documents\GitHub\PRACTICAS-NBU\imagenes cartas\pikachu.jpg")
 #extract_text("pikachu.jpg")
