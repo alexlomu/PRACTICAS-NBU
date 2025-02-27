@@ -40,25 +40,25 @@ def classify_card(image_path, use_easyocr=False):
     extracted_text = extract_text_easyocr(image_path) if use_easyocr else extract_text_tesseract(image_path)
     
     categories = {
-        "Pokémon": ["pokemon", "pikachu", "charizard", "pokeball"],
-        "Dragon Ball": ["dragon ball", "goku", "vegeta", "kamehameha"],
-        "LaLiga": ["laliga", "barcelona", "real madrid", "messi"],
-        "Yu-Gi-Oh!": ["yu-gi-oh", "blue-eyes", "dark magician"],
-        "One Piece": ["one piece", "luffy", "zoro", "nami"],
-        "Disney Lorcana": ["disney lorcana", "mickey", "donald", "goofy"],
-        "Star Wars Unlimited": ["star wars unlimited", "vader", "jedi", "sith"],
-        "Flesh and Blood": ["flesh blood", "fab", "arcane", "warrior"],
-        "Digimon Card Game": ["digimon", "agumon", "gabumon", "tamer"],
-        "Vanguard": ["vanguard", "blaster", "overdress", "clan"],
-        "Weiß Schwarz": ["weis schwarz", "anime", "waifu", "shiny"],
-        "Battle Spirits Saga": ["battle spirits saga", "core", "spirit", "burst"],
-        "Final Fantasy": ["final fantasy", "cloud", "sephiroth", "chocobo"],
-        "Force of Will": ["force of will", "fow", "ruler", "magic stone"],
-        "World of Warcraft": ["world of warcraft", "wow", "horde", "alliance"],
-        "Star Wars Destiny": ["star wars destiny", "force", "blaster", "droid"],
-        "Dragon Borne": ["dragon borne", "ember", "storm", "ally"],
-        "Little Pony": ["little pony", "mlp", "twilight sparkle", "friendship"],
-        "Spoils": ["spoils", "greed", "rogue", "warrior"]
+        "Pokémon": ["pokemon"],
+        "Dragon Ball": ["dragon ball card game"],
+        "LaLiga": ["laliga", "panini"],
+        "Yu-Gi-Oh!": ["yu-gi-oh"],
+        "One Piece": ["one piece"],
+        "Disney Lorcana": ["disney lorcana"],
+        "Star Wars Unlimited": ["star wars unlimited"],
+        "Flesh and Blood": ["flesh blood"],
+        "Digimon Card Game": ["digimon"],
+        "Vanguard": ["vanguard"],
+        "Weiß Schwarz": ["weis schwarz"],
+        "Battle Spirits Saga": ["battle spirits saga"],
+        "Final Fantasy": ["final fantasy"],
+        "Force of Will": ["force of will"],
+        "World of Warcraft": ["world of warcraft", "wow"],
+        "Star Wars Destiny": ["star wars destiny"],
+        "Dragon Borne": ["dragon borne"],
+        "Little Pony": ["little pony"],
+        "Spoils": ["spoils"]
     }
     
     detected_categories = []
@@ -84,5 +84,5 @@ def classify_card(image_path, use_easyocr=False):
         print("No se pudo clasificar la carta.")
 
 # Prueba con una imagen y opción de usar EasyOCR en lugar de Tesseract
-image_path = "pikachu2.jpg"
+image_path = "imagenes cartas/dragonball_detras.jpg"
 classify_card(image_path, use_easyocr=True)
