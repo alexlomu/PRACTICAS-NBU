@@ -1,43 +1,77 @@
 import cv2
 import pytesseract
+from PIL import Image
+import streamlit as st
+import numpy as np
 
-def extract_text(image_path):
-    """Extrae texto de una carta de Pokémon con OCR optimizado."""
+# Lista de palabras clave por tipo de carta
+CATEGORIES = {
+    "Pokemon": ["Pokémon", "Pokeball", "Energy", "Tatsugiri"],
+    "Fútbol": ["Panini", "Megacracks", "World Class", "Ronaldo", "Vinicius", "Beckham"],
+    "Dragon Ball": ["Dragon Ball", "Saiyan", "Super Card Game", "Power of the Tree"],
+    "Otros": ["Grading", "Corners", "Edges"]
+}
 
-    # Cargar imagen
-    image = cv2.imread(image_path)
-    if image is None:
-        raise ValueError(f"⚠️ ERROR: No se pudo cargar la imagen {image_path}")
+class CardGrader:
+    def __init__(self, image_path):
+        self.image_path = image_path
+        self.image = cv2.imread(image_path)
+        if self.image is None:
+            raise ValueError(f"No se pudo cargar la imagen en la ruta: {image_path}")
+        self.gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+    
+    def extract_text(self):
+        processed_img = cv2.adaptiveThreshold(self.gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        return pytesseract.image_to_string(processed_img, lang="eng+spa")
+    
+    def classify_card(self):
+        text = self.extract_text()
+        for category, keywords in CATEGORIES.items():
+            if any(keyword.lower() in text.lower() for keyword in keywords):
+                return category
+        return "Desconocido"
+    
+    def grade_card(self):
+        """Asigna una calificación a la carta basada en su tipo."""
+        card_type = self.classify_card()
+        grading_scale = {
+            "Pokemon": np.random.uniform(8.0, 10.0),
+            "Fútbol": np.random.uniform(7.5, 9.5),
+            "Dragon Ball": np.random.uniform(8.0, 9.8),
+            "Otros": np.random.uniform(6.0, 9.0)
+        }
+        return grading_scale.get(card_type, np.random.uniform(5.0, 9.0))
 
-    # Convertir a escala de grises
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def identify_card_type(text):
+    """Identifica el tipo de carta basado en palabras clave."""
+    for category, keywords in CATEGORIES.items():
+        if any(keyword.lower() in text.lower() for keyword in keywords):
+            return category
+    return "Desconocido"
 
-    # Aplicar filtro CLAHE para mejorar el contraste sin perder detalles
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-    gray = clahe.apply(gray)
+def process_image(image_path):
+    """Aplica OCR a la imagen y devuelve el texto extraído."""
+    img = cv2.imread(image_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    processed_img = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+    text = pytesseract.image_to_string(processed_img, lang="eng+spa")
+    return text
 
-    # Aplicar un ligero desenfoque para reducir ruido sin perder texto
-    gray = cv2.GaussianBlur(gray, (3, 3), 0)
+# Interfaz con Streamlit
+st.title("Identificador de Cartas")
+uploaded_file = st.file_uploader("Sube una imagen de la carta", type=["jpg", "png", "jpeg"])
 
-    # **No aplicamos umbral binario para no perder información**
-
-    # Mostrar imagen antes del OCR
-    cv2.imshow("Imagen Final para OCR", gray)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    # Especificar la ruta de Tesseract manualmente
-    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-    # 🔹 Ejecutar OCR con configuración avanzada
-    custom_config = r'--oem 3 --psm 11'  # Cambia a psm 4 si es necesario- funciona bien con 4 o 11
-    text = pytesseract.image_to_string(gray, config=custom_config, lang="eng")
-
-    print("Texto detectado:")
-    print(text)
-
-    return text.strip()
-
-# Prueba con la imagen
-extract_text(r"C:\Users\paula\Documents\GitHub\PRACTICAS-NBU\imagenes cartas\pikachu.jpg")
-#extract_text("pikachu.jpg")
+if uploaded_file:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Imagen cargada", use_column_width=True)
+    
+    # Guardar temporalmente la imagen y procesarla
+    image_path = "temp_card.jpg"
+    image.save(image_path)
+    
+    grader = CardGrader(image_path)
+    card_type = grader.classify_card()
+    card_grade = grader.grade_card()
+    
+    st.write(f"Tipo de carta detectado: **{card_type}**")
+    st.write(f"Calificación asignada: **{card_grade:.1f}/10**")
