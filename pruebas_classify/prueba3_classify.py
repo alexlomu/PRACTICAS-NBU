@@ -45,13 +45,12 @@ def detect_brand(input_image_path, reference_folder):
     
     if best_match:
         print(f"La carta pertenece a la marca: {best_match}")
-        
         # Preguntar al usuario si la marca detectada es correcta
         respuesta = input(f"¿Es correcta la marca detectada ({best_match})? (sí/no): ").strip().lower()
         if respuesta == "no":
             print("Por favor, introduce otra imágen de la carta.")
         else:
-            print("Marca confirmada correctamente.")
+            print("Marca confirmada correctamente.")        
     else:
         print("No se encontró una coincidencia clara.")
     
@@ -59,5 +58,5 @@ def detect_brand(input_image_path, reference_folder):
 
 # Prueba con una imagen
 reference_folder = "reference_images"  # Carpeta con imágenes de referencia
-input_image_path = "imagenes_cartas/lorcana_detras2.jpg"  # Imagen de la carta a analizar
+input_image_path = "imagenes_cartas/yugioh_detras3.jpg"  # Imagen de la carta a analizar
 detect_brand(input_image_path, reference_folder)
